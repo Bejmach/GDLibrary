@@ -1,8 +1,11 @@
+//free to use, current version 0.0012(some random small numbers)
+
 using Godot;
 using System;
 
 public static class GDLibrary
 {
+
     public static float slope(float time){
         time = time%1;
         return time;
@@ -50,4 +53,20 @@ public static class GDLibrary
             return variable;
         }
     }
+    public static Vector3 lerpv3OverAxis(Vector3 firstVector, Vector3 secondVector, float by){
+		if(MathF.Abs(firstVector.Y - secondVector.Y)<MathF.Abs(firstVector.Y - (secondVector.Y+360)) && MathF.Abs(firstVector.Y - secondVector.Y)<MathF.Abs(firstVector.Y - (secondVector.Y-360))){
+			return firstVector.Lerp(secondVector, by);
+		}
+		else if(MathF.Abs(firstVector.Y - (secondVector.Y+360))<MathF.Abs(firstVector.Y - (secondVector.Y-360))){
+			return firstVector.Lerp(secondVector+Vector3.Up*360, by);
+		}
+		else{
+			return firstVector.Lerp(secondVector-Vector3.Up*360, by);
+		}
+	}
+    public static Transform3D rotateToDirection(Transform3D firstTransform, Vector3 direction, float by){
+		Vector3 lookPosition =firstTransform.Origin+direction.Normalized();
+        Transform3D newTransform = firstTransform.LookingAt(lookPosition, Vector3.Up);
+        return firstTransform.InterpolateWith(newTransform, by);
+	}
 }
